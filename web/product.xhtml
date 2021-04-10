@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <sidebar>
+            <h:form>
+                <div class="toggler-button">
+                    <p:commandLink oncomplete="PF('profile').show()"
+                                   styleClass="side-toggler">
+                        <h:graphicImage value="img/profile.png" style="width: 70px;height: 70px"/>
+                    </p:commandLink>
+                </div>
+                <p:sidebar widgetVar="profile" baseZIndex="10000">
+                    <h1 style="font-weight:normal">Hello #{loginBean.loggedCustomer.firstName}</h1>
+                    <div>
+                        <ul style="list-style: none">
+                            <li><h:commandLink value="Cart" action="customerCart"/></li>
+                            <li><h:commandLink value="Addresses" action="customerAddressMaster"/></li>
+                        </ul>
+                    </div>
+                </p:sidebar>
+            </h:form>
+        </sidebar>
+        <title>#{productsMB.selectedProduct.name}</title>
+        <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+        <script src="https://kit.fontawesome.com/ffe3f21827.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+            <div class="container">
+                <nav>
+                    <h:form>        
+                        <li>
+                            <ul><h:commandLink action="customerHome">
+                                    <i class="fas fa-home"></i>
+                                </h:commandLink>
+                            </ul>
+                            <ul>
+                                <h:commandLink action="customerCart">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </h:commandLink>
+                            </ul>
+                            <ul>
+                                <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="Logout">
+                                    <!--<h:graphicImage value="img/admin.png" style="width: 20px;height: 20px;"/>-->
+                                    <i class="fas fa-sign-out-alt" style="width: 50px;height: 50px;"></i>
+                                </h:outputLink>
+
+                                <p:dialog header="Logout" widgetVar="dlg" resizable="false">
+                                    <h:panelGrid columns="1" cellpadding="5">
+                                        <h:outputText value="You want to logout?"/>
+                                        <f:facet name="footer">
+                                            <h:commandButton value="Yes" action="#{loginBean.logout()}"/>
+                                        </f:facet>  
+                                    </h:panelGrid>
+                                </p:dialog>    
+                            </ul>
+                        </li>
+                    </h:form>
+                </nav>
+            </div>
+        </header>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <div class="product-container">
+                <div class="picture-container">
+                    <h:graphicImage value="productImages/#{productsMB.selectedProduct.picture}" 
+                                    style="width: 400px;height:400px;"/>
+                </div>
+                <div class="description-container">
+                    <h2>#{productsMB.selectedProduct.name} #{productsMB.selectedProduct.specification}</h2>
+                    <h1 style="color: #ff0000">$ #{productsMB.selectedProduct.sellPrice}</h1>
+                    <div style="font-size: x-large">
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="SKU"/>
+                            <h:outputLabel value=": #{productsMB.selectedProduct.productId}"/>
+
+                            <h:outputLabel value="Category"/>
+                            <h:outputLabel value=": #{productsMB.selectedProduct.categoryId.name}"/>
+
+                            <h:outputLabel value="Brand"/>
+                            <h:outputLabel value=": #{productsMB.selectedProduct.brandId.name}"/>
+
+                            <h:outputLabel value="Stock left"/>
+                            <h:outputLabel value=": #{productsMB.selectedProduct.stock}"/>
+
+                        </h:panelGrid>
+                        <h:form>
+                            <p:growl id="msgs" showDetail="true"/>
+                            <h:panelGrid columns="2">
+                                <p:commandLink action="#{orderMB.insertToCart()}" title="Add To Cart" update="msgs">
+                                    <i class="fas fa-cart-plus" style="color: #ff0000"></i>
+                                </p:commandLink>
+                                <i class="fas fa-heart"></i>
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+
+    <footer>
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h1 class="logo-text"><span style="color: #ff8c00">Ryzen</span>Store</h1>
+                    <p>
+                        RyzenStore is a tech company that is focused on providing the best 
+                        Computer Hardware products with the best price on the market. We also try 
+                        to provide a complete range of AMD products as out sponsor.
+                    </p>
+                    <div class="contact">
+                        <span><i class="fas fa-phone"></i>&nbsp;089525285113</span><br/>
+                        <span><i class="fas fa-envelope"></i>&nbsp;ilevenreynara@gmail.com</span>
+                    </div>
+                    <div class="socials">
+                        <a href="https://www.facebook.com/Ileven.reynaraC" target="_blank"><i class="fab fa-facebook" style="color: white"></i></a>
+                        <a href="https://www.instagram.com/ilevenre/" target="_blank"><i class="fab fa-instagram" style="color: white"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section links">
+                    <h2>Quick Links</h2><br/>
+                    <div class="quick-links">
+                        <a href="#">My Blog</a><br/>
+                        <a href="#">Teams</a><br/>
+                        <a href="#">Github</a><br/>
+                    </div>
+                </div>
+                <div class="footer-section contact-form">
+                    <h2>Contact Us</h2><br/>
+                    <h:form>
+                        <h:panelGrid columns="1">
+                            <p:outputLabel value="Email" />
+                            <!--<p:inputText value=""/>-->
+
+                            <p:outputLabel value="Message" />
+                            <!--<p:inputTextarea value="" />-->
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; www.amd.com | Designed By Ileven Reynara
+            </div>
+        </div>
+
+    </footer>
+</html>
+

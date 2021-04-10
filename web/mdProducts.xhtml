@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Master Data Products</title>
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+            <div class="container">
+                <nav>
+                    <li>
+                        <ul><h:link outcome="index" value="Index"/></ul>
+                        <ul><h:link outcome="mdCustomer" value="Master Customers"/></ul>
+                        <ul><h:link outcome="mdCategories" value="Master Categories"/></ul>
+                        <ul><h:link outcome="mdBrand" value="Master Brands"/></ul>
+                    </li>
+                </nav>
+
+            </div>
+        </header>
+    </h:head>
+    <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+    <h:body>
+        <h1 class="mdHeader"><h:outputText value="Products Master Data"/></h1>
+        
+        <h:form enctype="multipart/form-data">
+            <p:growl id="msgs" showDetail="true"/>
+            <h:panelGrid columns="2">
+                <f:view>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Name:" for="name" />
+                            <p:inputText id="name" value="#{productsMB.product.name}" title="Name" />
+
+                            <p:outputLabel value="BuyPrice:" for="buyPrice" />
+                            <p:inputNumber minValue="0" id="buyPrice" value="#{productsMB.product.buyPrice}" title="BuyPrice" />
+
+                            <p:outputLabel value="SellPrice:" for="sellPrice" />
+                            <p:inputNumber minValue="0" id="sellPrice" value="#{productsMB.product.sellPrice}" title="SellPrice" />
+
+                            <p:outputLabel value="Stock:" for="stock" />
+                            <p:spinner min="0" id="stock" value="#{productsMB.product.stock}" title="Stock" />
+
+                            <p:outputLabel value="Category:" for="categoryId" />
+                            <p:selectOneMenu id="categoryId" value="#{productsMB.category.categoryId}" title="Category"
+                                             valueChangeListener="#{productsMB.categoryChange}" onchange="submit()">
+                                <f:selectItems value="#{productsMB.catData}"
+                                               var="cat"
+                                               itemLabel="#{cat.name}"
+                                               itemValue="#{cat.categoryId}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Brand:" for="brandId" />
+                            <p:selectOneMenu id="brandId" value="#{productsMB.brand.brandId}" title="Brand" >
+                                <f:selectItem itemLabel="--Select Items--" itemDisabled="true"/>
+                                <f:selectItems value="#{productsMB.brandData}"
+                                               var="brand"
+                                               itemLabel="#{brand.brandId.name}"
+                                               itemValue="#{brand.brandId.brandId}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Image"/>
+                            <h:inputFile value="#{productsMB.uploadedFile}"/>
+
+                            <p:outputLabel value="Specification" for="specification"/>
+                            <p:inputTextarea value="#{productsMB.product.specification}" id="specification"/>
+                        
+                            <p:outputLabel value="Discontinued"/>
+                            <p:selectBooleanButton value="#{productsMB.product.discontinued}" onLabel="Yes" offLabel="No"/>
+ 
+                        </h:panelGrid>
+                        <h:commandButton action="#{productsMB.insertProduct()}" value="Save"/>
+                    </h:form>
+                </f:view>
+            </h:panelGrid>
+        </h:form>
+        <f:view>
+            <h:form id="form" >
+                <p:dataTable value="#{productsMB.prodData}" var="prod"
+                             id="product" widgetVar="productss"
+                             style="margin-bottom: 40px"
+                             paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15">
+                    
+                    <p:column style="width:50px" sortBy="#{prod.productId}">
+                        <f:facet name="header">
+                            <h:outputText value="ID"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.productId}"/>
+                    </p:column>
+                    <p:column sortBy="#{prod.name}">
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.name}"/>
+                    </p:column >
+                    <p:column style="width:90px" sortBy="#{prod.buyPrice}">
+                        <f:facet name="header">
+                            <h:outputText value="Buy"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.buyPrice}"/>
+                    </p:column>
+                    <p:column style="width:90px" sortBy="#{prod.sellPrice}">
+                        <f:facet name="header">
+                            <h:outputText value="Sell"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.sellPrice}"/>
+                    </p:column>
+                    <p:column style="width:50px" sortBy="#{prod.stock}">
+                        <f:facet name="header">
+                            <h:outputText value="Stock"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.stock}"/>
+                    </p:column>
+                    <p:column style="width:140px" sortBy="#{prod.categoryId.categoryId}">
+                        <f:facet name="header">
+                            <h:outputText value="Category"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.categoryId.name}"/>
+                    </p:column>
+                    <p:column style="width:150px">
+                        <f:facet name="header">
+                            <h:outputText value="Image"/>
+                        </f:facet>
+                        <h:graphicImage value="productImages/#{prod.picture}" style="width: 100px;height: 100px;">
+                        </h:graphicImage>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Specs"/>
+                        </f:facet>
+                        <h:outputText value="#{prod.specification}"/>
+                    </p:column>
+                    <p:column style="width: 70px;">
+                        <p:commandButton update=":form:editPanel" oncomplete="PF('editDialog').show()" value="Edit" >
+                            <f:setPropertyActionListener value="#{prod}" target="#{productsMB.selectedProduct}"/>
+                            <f:setPropertyActionListener value="#{prod.categoryId}" target="#{productsMB.category}"/>
+                            <f:actionListener binding="#{productsMB.setBrandForSelectedProd()}"/>
+                            <!--<f:actionListener binding="#{productsMB.setSelectedProduct(prod)}"/>-->
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog header="Edit Product" widgetVar="editDialog" modal="true" 
+                          showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="editPanel" style="text-align: center;">
+                        <h:panelGrid columns="2" rendered="#{not empty productsMB.selectedProduct}">
+
+                            <p:outputLabel value="ID"/>
+                            <p:outputLabel value="#{productsMB.selectedProduct.productId}"/>
+
+                            <p:outputLabel value="Name"/>
+                            <p:inputText value="#{productsMB.selectedProduct.name}"/>
+
+                            <p:outputLabel value="BuyPrice" for="buyPrice" />
+                            <p:inputNumber minValue="0" id="buyPrice" value="#{productsMB.selectedProduct.buyPrice}" title="BuyPrice" />
+
+                            <p:outputLabel value="SellPrice" for="sellPrice" />
+                            <p:inputNumber minValue="0" id="sellPrice" value="#{productsMB.selectedProduct.sellPrice}" title="SellPrice" />
+
+                            <p:outputLabel value="Stock" for="stock" />
+                            <p:spinner min="0" id="stock" value="#{productsMB.selectedProduct.stock}" title="Stock" />
+
+                            <p:outputLabel value="Category" for="category" />
+                            <p:selectOneMenu id="category" value="#{productsMB.category.categoryId}" title="Category" >
+                                <p:ajax event="itemSelect" update="brandUpdt" listener="#{productsMB.categoryChangeListener}"/>
+                                <f:selectItems value="#{productsMB.catData}"
+                                               var="cat"
+                                               itemLabel="#{cat.name}"
+                                               itemValue="#{cat.categoryId}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Brand:"  />
+                            <h:selectOneMenu value="#{productsMB.brand.brandId}" title="Brand" id="brandUpdt">
+                                <f:selectItem itemLabel="--Select Items--" itemDisabled="true"/>
+                                <f:selectItems value="#{productsMB.brandData}"
+                                               var="brand"
+                                               itemLabel="#{brand.brandId.name}"
+                                               itemValue="#{brand.brandId.brandId}"/>
+                            </h:selectOneMenu>
+
+                            <p:outputLabel value="Specification" for="specification"/>
+                            <p:inputTextarea value="#{productsMB.selectedProduct.specification}" id="specification"/>
+                            
+                            <p:outputLabel value="Discontinued"/>
+                            <p:selectBooleanButton value="#{productsMB.selectedProduct.discontinued}" onLabel="Yes" offLabel="No"/>
+
+                            <h:commandButton  value="Update" action="#{productsMB.updateProduct()}"/>
+
+                        </h:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </f:view>
+    </h:body>
+
+</html>
+

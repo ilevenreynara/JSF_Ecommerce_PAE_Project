@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+        <h:form>
+            <header>
+                <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+                <div class="container">
+                    <nav>
+                        <li>
+                            <ul><h:link outcome="mdProducts" value="Master Products"/></ul>
+                            <ul><h:link outcome="mdCustomer" value="Master Customers"/></ul>
+                            <ul><h:link outcome="mdCategories" value="Master Categories"/></ul>
+                            <ul><h:link outcome="mdBrand" value="Master Brand"/></ul>
+                            <ul>
+                                <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="Logout">
+                                    <!--<h:graphicImage value="img/admin.png" style="width: 20px;height: 20px;"/>-->
+                                    <i class="fas fa-sign-out-alt" style="width: 50px;height: 50px;"></i>
+                                </h:outputLink>
+
+                                <p:dialog header="Logout" widgetVar="dlg" resizable="false">
+                                    <h:panelGrid columns="1" cellpadding="5">
+                                        <h:outputText value="You want to logout?"/>
+                                        <f:facet name="footer">
+                                            <h:commandButton value="Yes" action="#{loginBean.logout()}"/>
+                                        </f:facet>  
+                                    </h:panelGrid>
+                                </p:dialog>    
+                            </ul>
+                        </li>
+                    </nav>
+
+                </div>
+            </header>
+        </h:form>
+        <script src="https://kit.fontawesome.com/ffe3f21827.js" crossorigin="anonymous"></script>
+    </h:head>
+    <h:body>
+        <h:form>
+
+            <p:dataView var="prod" value="#{productsMB.mostViewedProd}"
+                        rows="12" paginator="true" rowsPerPageTemplate="6,12,16"
+                        paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        gridIcon="fas fa-th" listIcon="fas fa-list" id="product">
+                <p:dataViewGridItem>
+                    <p:panel header="#{prod.categoryId.name}" style="text-align: center">
+                        <h:panelGrid columns="1" style="width: 100%">
+                            <h:graphicImage value="productImages/#{prod.picture}" style="width: 200px; height: 200px"/>
+
+                            <h:outputText value="#{prod.name}"/>
+                            <h:outputText value="View Count: #{prod.viewCount}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:dataViewGridItem>
+                <p:dataViewListItem>
+                    <h:panelGrid columns="3" style="width: 100%" columnClasses="logo,detail">
+                        <h:graphicImage value="productImages/#{prod.picture}" style="width: 150px; height: 150px"/>
+
+
+                        <p:outputPanel>
+                            <h:panelGrid columns="1" cellpadding="5">
+                                <h:outputText value="#{prod.categoryId.name}" style="font-size: large"/>
+                                <h:outputText value="#{prod.name}"/>
+                                <h:outputText value="#{prod.specification}" style="font-size: large; font-weight: 500;"/>
+                                <h:outputText value="View Count : #{prod.viewCount}" style="font-size: large; font-weight: 500;"/>
+                            </h:panelGrid>
+                        </p:outputPanel>
+                    </h:panelGrid>
+                </p:dataViewListItem>
+            </p:dataView>
+        </h:form>
+    </h:body>
+</html>
+

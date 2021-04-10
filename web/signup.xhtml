@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Sign Up</title>
+        <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+        </header>
+    </h:head>
+    <h:body>
+        <br/>
+        <br/>
+        <div class="signup-form">
+            <h:form>
+                <p:growl id="msgs" showDetail="true"/>
+                <fieldset>
+                    <legend>Registration Form</legend>
+                    <h:panelGrid columns="4">
+                        <p:outputLabel value="First Name" for="firstName" />
+                        <p:inputText id="firstName" value="#{signupMB.newCustomer.firstName}" title="FirstName" required="true" requiredMessage="The FirstName field is required."/>
+
+                        <p:outputLabel value="Last Name" for="lastName" />
+                        <p:inputText id="lastName" value="#{signupMB.newCustomer.lastName}" title="LastName" required="true" requiredMessage="The LastName field is required."/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Gender" for="gender" />
+                        <p:selectOneRadio id="gender" value="#{signupMB.newCustomer.gender}">
+                            <f:selectItem itemLabel="Male" itemValue="Male"/>
+                            <f:selectItem itemLabel="Female" itemValue="Female"/>
+                            <f:selectItem itemLabel="Other" itemValue="Other"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel value="Marital Status" for="maritalStatus" />
+                        <p:selectOneRadio id="maritalStatus" value="#{signupMB.newCustomer.maritalStatus}">
+                            <f:selectItem itemLabel="Married" itemValue="Married"/>
+                            <f:selectItem itemLabel="Not Married" itemValue="Not Married"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel value="Phone" for="phone" />
+                        <p:inputText id="phone" 
+                                       value="#{signupMB.newCustomer.phone}" title="Phone"
+                                       required="true" requiredMessage="The Phone field is required.">
+                            <p:keyFilter regEx="/[\d\-\.]/"/>
+                        </p:inputText>
+
+                        <p:outputLabel value="Birth Date" for="birthDate" />
+                        <p:datePicker id="birthDate" value="#{signupMB.newCustomer.birthDate}" 
+                                      title="BirthDate" yearNavigator="true" yearRange="1900:2005"
+                                      monthNavigator="true"
+                                      required="true" requiredMessage="The BirthDate field is required."/>
+
+                        <p:outputLabel value="Email" for="email" />
+                        <p:inputText id="email" value="#{signupMB.newCustomer.email}" title="Email" required="true" requiredMessage="The Email field is required."/>
+
+                        <p:outputLabel value="Password" for="password" />
+                        <p:password id="password" value="#{signupMB.password1}" title="Password" required="true" requiredMessage="The Password field is required.">
+                            <f:validateLength minimum="8"/>
+                        </p:password>
+
+                        <p:outputLabel value="Confirm Password" for="confirm" />
+                        <p:password id="confirm" value="#{signupMB.password2}" title="Confirm Password" required="true" requiredMessage="The Confirmation field is required."/>
+
+                    </h:panelGrid>
+                    <br/>
+                    <h:commandButton action="#{signupMB.insertNewCust()}" value="Register"/>
+                </fieldset>
+            </h:form>
+            <br/>
+            
+            <h:form>
+                <h:commandButton action="login" value="Cancel"/>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

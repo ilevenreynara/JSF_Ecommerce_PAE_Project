@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Master Brands</title>
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+            <div class="container">
+                <nav>
+                    <li>
+                        <ul><h:link outcome="index" value="Home"/></ul>
+                        <ul><h:link outcome="mdProducts" value="Master Products"/></ul>
+                        <ul><h:link outcome="mdCustomer" value="Master Customer"/></ul>
+                        <ul><h:link outcome="mdCategories" value="Master Categories"/></ul>
+                    </li>
+                </nav>
+
+            </div>
+        </header>
+    </h:head>
+    <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+    <h:body>
+        <h1><p:outputLabel value="Brand Master Data"/></h1>
+        <h:form>
+            <h:panelGrid columns="2">
+                <p:outputLabel value="Name" for="name" />
+                <p:inputText id="name" value="#{brandMB.brand.name}" title="Name" />
+
+            </h:panelGrid>
+            <h:commandButton action="#{brandMB.insertBrand()}" value="Save"  rendered="#{brandMB.editMode == false}"/>
+            <h:commandButton action="#{brandMB.updateBrand()}" value="Update"  rendered="#{brandMB.editMode == true}"/>
+        </h:form>
+        <f:view>
+            <h:form id="form">
+                <p:growl id="msgs" showDetail="true"/>
+                <p:dataTable value="#{brandMB.brandData}" var="item"
+                             id="categories" widgetVar="brand"
+                             style="margin-bottom: 40px"
+                             paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15">
+                    <p:column style="width: 20px">
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{item.brandId}"/>
+                    </p:column>
+                    <p:column style="width: 120px">
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+                    <p:column style="width: 70px">
+                        <h:commandButton value="Edit" action="#{brandMB.setSelected(item)}"/>
+                    </p:column >
+                    <p:column style="width: 70px">
+                        <h:commandButton value="Delete" action="#{brandMB.deleteBrand(item)}"/>
+                    </p:column>
+                    <p:column style="width: 70px;">
+                        <p:commandButton update=":form:editPanel" oncomplete="PF('editDialog').show()" value="Manage Categories" >
+                            <f:actionListener binding="#{brandMB.reset()}"/>
+                            <f:setPropertyActionListener value="#{item}" target="#{brandMB.selectedBrand}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:dialog header="Brand Categories" widgetVar="editDialog" modal="true" 
+                          showEffect="fade" hideEffect="fade" resizable="false" style="width: 500px;">
+                    <p:outputPanel id="editPanel" style="text-align: center;">
+                        <h:panelGrid columns="3" rendered="#{not empty brandMB.selectedBrand}">
+                            <p:outputLabel value="Categories"/>
+                            <p:selectOneMenu value="#{brandMB.cat.categoryId}">
+                                <f:selectItems value="#{brandMB.catData}"
+                                               var="cat"
+                                               itemLabel="#{cat.name}"
+                                               itemValue="#{cat.categoryId}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Add Category" action="#{brandMB.addBrandCategory()}" update="brandCatData">
+                                <f:actionListener binding="#{brandMB.resetBrandCatData()}"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                        <p:dataTable value="#{brandMB.brandCatData}" var="item" id="brandCatData">
+                            <p:column style="width: 150px">
+                                <f:facet name="header">
+                                    <h:outputText value="Category"/>
+                                </f:facet>
+                                <h:outputText value="#{item.categoryId.name}"/>
+                            </p:column>
+                            <p:column style="width: 90px">
+                                <p:commandButton value="Remove" action="#{brandMB.deleteBrandCategory(item)}" update="brandCatData">
+                                    <f:actionListener binding="#{brandMB.resetBrandCatData()}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </f:view>
+
+
+    </h:body>
+
+</html>
+

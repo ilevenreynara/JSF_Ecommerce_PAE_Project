@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Master Data Customer</title>
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+            <div class="container">
+                <nav>
+                    <li>
+                        <ul><h:link outcome="index" value="Index"/></ul>
+                        <ul><h:link outcome="mdProducts" value="Master Products"/></ul>
+                        <ul><h:link outcome="mdCategories" value="Master Categories"/></ul>
+                        <ul><h:link outcome="mdBrand" value="Master Brand"/></ul>
+                    </li>
+                </nav>
+
+            </div>
+        </header>
+    </h:head>
+    <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+    <h:body>
+        <h1 class="mdHeader"><p:outputLabel value="Customer Master Data"/></h1>
+        <f:view>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="First Name:" for="firstName" />
+                    <p:inputText id="firstName" value="#{customerMB.customer.firstName}" title="FirstName" required="true" requiredMessage="The FirstName field is required."/>
+
+                    <p:outputLabel value="Last Name:" for="lastName" />
+                    <p:inputText id="lastName" value="#{customerMB.customer.lastName}" title="LastName" required="true" requiredMessage="The LastName field is required."/>
+
+                    <p:outputLabel value="Gender:" for="gender" />
+                    <p:selectOneRadio id="gender" value="#{customerMB.customer.gender}">
+                        <f:selectItem itemLabel="Male" itemValue="Male"/>
+                        <f:selectItem itemLabel="Female" itemValue="Female"/>
+                        <f:selectItem itemLabel="Other" itemValue="Other"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="Marital Status:" for="maritalStatus" />
+                    <p:selectOneRadio id="maritalStatus" value="#{customerMB.customer.maritalStatus}">
+                        <f:selectItem itemLabel="Married" itemValue="Married"/>
+                        <f:selectItem itemLabel="Not Married" itemValue="Not Married"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="Phone:" for="phone" />
+                    <p:inputText id="phone" value="#{customerMB.customer.phone}" title="Phone" required="true" requiredMessage="The Phone field is required.">
+                        <p:keyFilter regEx="/[\d\-\.]/"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Birth Date:" for="birthDate" />
+                    <p:datePicker id="birthDate" value="#{customerMB.customer.birthDate}" title="BirthDate" required="true" requiredMessage="The BirthDate field is required."/>
+
+                    <p:outputLabel value="Email:" for="email" />
+                    <p:inputText id="email" value="#{customerMB.customer.email}" title="Email" required="true" requiredMessage="The Email field is required.">
+                        <f:validateRegex pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Password:" for="password" />
+                    <p:inputText id="password" value="#{customerMB.customer.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
+                </h:panelGrid>
+                <h:commandButton action="#{customerMB.insertCustomer()}" value="Save" rendered="#{customerMB.editMode == false}"/>
+                <h:commandButton action="#{customerMB.updateCustomer()}" value="Update" rendered="#{customerMB.editMode == true}"/>
+            </h:form>
+        </f:view>
+        <f:view>
+            <h:form id="form1">
+                <p:dataTable value="#{customerMB.custData}" var="item">
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="CustomerId"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.customerId}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="FirstName"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.firstName}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="LastName"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.lastName}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Gender"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.gender}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="MaritalStatus"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.maritalStatus}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Phone"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.phone}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="BirthDate"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.birthDate}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Email"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.email}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Password"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.password}"/>
+                    </p:column>
+                    <p:column style="width: 70px;">
+                        <h:commandButton value="Edit" action="#{customerMB.setSelectedCustomer(item)}"/>
+                    </p:column>
+                    <p:column style="width: 70px;">
+                        <h:commandButton value="Delete" action="#{customerMB.deleteCustomer(item)}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </f:view>
+
+    </h:body>
+
+</html>
+

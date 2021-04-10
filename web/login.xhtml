@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Login</title>
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" href="css/ecomCss.css"/>
+
+        <header>
+            <h1 class="logo"><img src="img/logo.png" id="logoImg"/></h1>
+            <div style="float: right">
+                <h:form>        
+                    <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="Admin Login">
+                        <h:graphicImage value="img/admin.png" style="width: 20px;height: 20px;"/>
+                    </h:outputLink>
+
+                    <p:dialog header="Login" widgetVar="dlg" resizable="false">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="username" value="Username:" />
+                            <p:inputText id="username" value="#{loginBean.loggedAdmin.username}" required="true" label="username" />
+
+                            <h:outputLabel for="password" value="Password:" />
+                            <p:password id="password" value="#{loginBean.loggedAdmin.password}" required="true" label="password" />
+
+                            <f:facet name="footer">
+                                <h:commandButton value="Login" action="#{loginBean.loginAdmin()}"/>
+                            </f:facet>  
+                        </h:panelGrid>
+                    </p:dialog>    
+                </h:form>
+            </div>
+        </header>
+    </h:head>
+    <h:body>
+
+        <div class="body" align="center" >
+            <br/><br/>
+            <fieldset style="width: 400px; text-align:left;padding-left: 20px;padding-right: 30px">
+                <h:form>
+                    <p:growl id="msgs" showDetail="true"/>
+                    <div align="center">
+                        <p:outputLabel value="LOGIN"/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <p:inputText style="width: 100%;" value="#{loginBean.loggedCustomer.email}" id="user" required="true"></p:inputText>
+                    <p:watermark for="user" value="Email"/>
+                    <br/><br/>
+                    <p:password id="pass" style="width: 100%;" value="#{loginBean.loggedCustomer.password}" required="true"></p:password>
+                    <p:watermark for="pass" value="Password"/>
+
+                    <br/>
+                    <br/>
+                    <div style="text-align: center;">
+                        <h:commandButton type="submit" value="Login" style="color:white;width: 90%; height: 35px;background-color: #333;"
+                                         action="#{loginBean.login()}">
+                        </h:commandButton>
+
+                        <br/><br/><br/>
+                        Don't have an account?
+
+                        <br/>
+
+                    </div>
+                </h:form>
+
+                <h:form>
+                    <div align="center">
+                        <h:commandButton type="submit" value="Sign Up" style="color:white;width: 90%; height: 35px;background-color: #333;" action="signup">
+                        </h:commandButton>
+                        <br/><br/>
+                        <h:commandButton type="submit" value="Resend Activation" style="color:white;width: 90%; height: 35px;background-color: #333;" action="resendActivation">
+                        </h:commandButton>
+
+                    </div>
+
+                </h:form>
+
+            </fieldset>
+        </div>
+    </h:body>
+</html>
+
